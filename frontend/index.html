@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Requeijão & Cia | Loja Virtual</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header class="topo">
+    <div class="logo">
+      <h1>REQUEIJÃO & CIA</h1>
+      <p>O sabor da tradição!</p>
+    </div>
+
+    <div class="acoes-topo">
+      <span id="nomeCliente">Bem-vindo!</span>
+      <button id="botaoCarrinho" class="botao-carrinho">
+        🛒 Carrinho <span id="contadorCarrinho">0</span>
+      </button>
+      <button id="botaoSair" class="botao-sair" hidden>
+        Sair
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- LOGIN E CADASTRO -->
+    <section id="secaoAutenticacao" class="painel autenticacao">
+
+      <div class="abas">
+        <button id="abaLogin" class="aba ativa">Entrar</button>
+        <button id="abaCadastro" class="aba">Cadastrar</button>
+      </div>
+
+      <form id="formLogin">
+        <h2>Acesse sua conta</h2>
+
+        <label for="loginEmail">E-mail</label>
+        <input id="loginEmail" type="email" required>
+
+        <label for="loginSenha">Senha</label>
+        <input id="loginSenha" type="password" required>
+
+        <button type="submit" class="botao-principal">
+          Entrar
+        </button>
+      </form>
+
+      <form id="formCadastro" hidden>
+        <h2>Crie sua conta</h2>
+
+        <label for="cadastroNome">Nome</label>
+        <input id="cadastroNome" type="text" required>
+
+        <label for="cadastroEmail">E-mail</label>
+        <input id="cadastroEmail" type="email" required>
+
+        <label for="cadastroSenha">Senha</label>
+        <input id="cadastroSenha" type="password" required minlength="6">
+
+        <button type="submit" class="botao-principal">
+          Criar conta
+        </button>
+      </form>
+
+      <p id="mensagemAutenticacao" class="mensagem"></p>
+    </section>
+
+    <!-- ÁREA DA LOJA -->
+    <section id="secaoLoja" hidden>
+
+      <div class="boas-vindas">
+        <div>
+          <h2>Nossos produtos</h2>
+          <p>Escolha seus produtos favoritos.</p>
+        </div>
+
+        <div id="statusVip" class="status-vip">
+          Cliente comum
+        </div>
+      </div>
+
+      <section id="progressoVip" class="painel progresso-vip">
+        <h3>Seu progresso VIP</h3>
+        <p id="textoProgressoVip">
+          Faltam R$ 300,00 para alcançar o VIP.
+        </p>
+
+        <div class="barra-progresso">
+          <div id="barraVip"></div>
+        </div>
+      </section>
+
+      <div id="listaProdutos" class="grade-produtos">
+        <!-- Produtos carregados pela API -->
+      </div>
+
+      <!-- CARRINHO -->
+      <section id="secaoCarrinho" class="painel carrinho">
+        <div class="titulo-carrinho">
+          <h2>🛒 Meu carrinho</h2>
+          <button id="fecharCarrinho" class="botao-secundario">
+            Fechar
+          </button>
+        </div>
+
+        <div id="itensCarrinho">
+          Seu carrinho está vazio.
+        </div>
+
+        <div class="resumo-compra">
+          <p>Subtotal: <strong id="subtotal">R$ 0,00</strong></p>
+          <p>Desconto: <strong id="desconto">R$ 0,00</strong></p>
+          <p>Frete: <strong id="frete">R$ 0,00</strong></p>
+          <h3>Total: <strong id="total">R$ 0,00</strong></h3>
+        </div>
+
+        <form id="formFinalizarCompra">
+          <label for="formaPagamento">Forma de pagamento</label>
+
+          <select id="formaPagamento" required>
+            <option value="dinheiro">Dinheiro (10% de desconto)</option>
+            <option value="cartao">Cartão</option>
+          </select>
+
+          <button type="submit" class="botao-principal">
+            Finalizar compra
+          </button>
+        </form>
+
+        <p id="mensagemCompra" class="mensagem"></p>
+      </section>
+
+      <!-- HISTÓRICO DA COMPRA -->
+      <section id="resultadoCompra" class="painel" hidden>
+        <h2>Compra realizada!</h2>
+        <div id="detalhesCompra"></div>
+      </section>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Requeijão & Cia — O sabor da tradição.</p>
+  </footer>
+
+  <script src="script.js"></script>
+
+</body>
+</html>

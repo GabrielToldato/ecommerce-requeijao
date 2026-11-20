@@ -1,0 +1,363 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --marrom: #593923;
+  --marrom-escuro: #382316;
+  --dourado: #c99a45;
+  --creme: #f8f4ec;
+  --branco: #ffffff;
+  --texto: #333333;
+  --cinza: #777777;
+  --verde: #287a49;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--creme);
+  color: var(--texto);
+  min-height: 100vh;
+}
+
+.topo {
+  background: var(--marrom-escuro);
+  color: var(--branco);
+  padding: 22px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.logo h1 {
+  font-size: 25px;
+  letter-spacing: 2px;
+}
+
+.logo p {
+  color: var(--dourado);
+  margin-top: 5px;
+}
+
+.acoes-topo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+button:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.botao-carrinho {
+  background: var(--dourado);
+  color: var(--marrom-escuro);
+}
+
+.botao-sair {
+  background: #8d3434;
+  color: white;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 35px auto;
+}
+
+.painel {
+  background: var(--branco);
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+}
+
+.autenticacao {
+  max-width: 430px;
+  margin: 40px auto;
+}
+
+.abas {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.aba {
+  flex: 1;
+  background: #eee8de;
+  color: var(--marrom);
+}
+
+.aba.ativa {
+  background: var(--marrom);
+  color: white;
+}
+
+form h2 {
+  margin-bottom: 20px;
+  color: var(--marrom);
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin: 15px 0 7px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  background: white;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid var(--dourado);
+  border-color: transparent;
+}
+
+.botao-principal {
+  width: 100%;
+  background: var(--marrom);
+  color: white;
+  margin-top: 20px;
+  padding: 15px;
+}
+
+.botao-secundario {
+  background: #eee8de;
+  color: var(--marrom);
+}
+
+.mensagem {
+  margin-top: 15px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.boas-vindas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.boas-vindas h2 {
+  color: var(--marrom);
+  font-size: 27px;
+}
+
+.boas-vindas p {
+  color: var(--cinza);
+  margin-top: 7px;
+}
+
+.status-vip {
+  background: #eee8de;
+  color: var(--marrom);
+  padding: 12px 18px;
+  border-radius: 30px;
+  font-weight: bold;
+}
+
+.status-vip.vip {
+  background: #fff0c9;
+  color: #8a5a00;
+}
+
+.progresso-vip {
+  margin-bottom: 30px;
+}
+
+.progresso-vip h3 {
+  color: var(--marrom);
+  margin-bottom: 10px;
+}
+
+.progresso-vip p {
+  color: var(--cinza);
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.barra-progresso {
+  height: 12px;
+  background: #eee8de;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+#barraVip {
+  width: 0%;
+  height: 100%;
+  background: var(--dourado);
+  transition: width 0.3s;
+}
+
+.grade-produtos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.produto-card {
+  background: white;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+}
+
+.produto-card h3 {
+  color: var(--marrom);
+  margin-bottom: 10px;
+}
+
+.produto-card p {
+  color: var(--cinza);
+  line-height: 1.5;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.produto-card .preco {
+  color: var(--marrom);
+  font-size: 19px;
+  font-weight: bold;
+}
+
+.produto-card .estoque {
+  font-size: 12px;
+  color: var(--verde);
+  margin-top: 8px;
+}
+
+.produto-card button {
+  width: 100%;
+  background: var(--dourado);
+  color: var(--marrom-escuro);
+  margin-top: 15px;
+}
+
+.carrinho {
+  margin-top: 35px;
+  display: none;
+}
+
+.carrinho.aberto {
+  display: block;
+}
+
+.titulo-carrinho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.titulo-carrinho h2 {
+  color: var(--marrom);
+}
+
+.item-carrinho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.resumo-compra {
+  background: var(--creme);
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.resumo-compra p,
+.resumo-compra h3 {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.resumo-compra h3 {
+  color: var(--marrom);
+  font-size: 21px;
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+}
+
+#resultadoCompra {
+  margin-top: 25px;
+}
+
+#resultadoCompra h2 {
+  color: var(--verde);
+  margin-bottom: 15px;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  background: var(--marrom-escuro);
+  color: white;
+  margin-top: 50px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .topo {
+    padding: 20px;
+  }
+
+  .container {
+    width: 92%;
+    margin: 20px auto;
+  }
+
+  .grade-produtos {
+    grid-template-columns: 1fr;
+  }
+
+  .boas-vindas h2 {
+    font-size: 23px;
+  }
+
+  .acoes-topo {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .painel {
+    padding: 18px;
+  }
+}
