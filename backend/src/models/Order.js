@@ -33,40 +33,60 @@ const pedidoSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+
   itens: {
     type: [itemPedidoSchema],
     required: true
   },
+
   subtotal: {
     type: Number,
     required: true,
     min: 0
   },
+
   desconto: {
     type: Number,
     default: 0,
     min: 0
   },
+
+  // Dados da entrega
+  cepDestino: {
+    type: String,
+    required: true
+  },
+
+  distanciaKm: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+
   frete: {
     type: Number,
     required: true,
     min: 0
   },
+
   total: {
     type: Number,
     required: true,
     min: 0
   },
+
   formaPagamento: {
     type: String,
     enum: ['dinheiro', 'cartao'],
     required: true
   },
+
   status: {
     type: String,
     enum: ['confirmado', 'cancelado'],
     default: 'confirmado'
   }
+
 }, {
   timestamps: true
 });

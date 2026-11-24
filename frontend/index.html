@@ -20,9 +20,11 @@
 
     <div class="acoes-topo">
       <span id="nomeCliente">Bem-vindo!</span>
+
       <button id="botaoCarrinho" class="botao-carrinho">
         🛒 Carrinho <span id="contadorCarrinho">0</span>
       </button>
+
       <button id="botaoSair" class="botao-sair" hidden>
         Sair
       </button>
@@ -63,7 +65,12 @@
         <input id="cadastroEmail" type="email" required>
 
         <label for="cadastroSenha">Senha</label>
-        <input id="cadastroSenha" type="password" required minlength="6">
+        <input
+          id="cadastroSenha"
+          type="password"
+          required
+          minlength="6"
+        >
 
         <button type="submit" class="botao-principal">
           Criar conta
@@ -87,8 +94,10 @@
         </div>
       </div>
 
+      <!-- PROGRESSO VIP -->
       <section id="progressoVip" class="painel progresso-vip">
         <h3>Seu progresso VIP</h3>
+
         <p id="textoProgressoVip">
           Faltam R$ 300,00 para alcançar o VIP.
         </p>
@@ -98,14 +107,17 @@
         </div>
       </section>
 
+      <!-- PRODUTOS -->
       <div id="listaProdutos" class="grade-produtos">
         <!-- Produtos carregados pela API -->
       </div>
 
       <!-- CARRINHO -->
       <section id="secaoCarrinho" class="painel carrinho">
+
         <div class="titulo-carrinho">
           <h2>🛒 Meu carrinho</h2>
+
           <button id="fecharCarrinho" class="botao-secundario">
             Fechar
           </button>
@@ -115,33 +127,86 @@
           Seu carrinho está vazio.
         </div>
 
+        <!-- RESUMO DA COMPRA -->
         <div class="resumo-compra">
-          <p>Subtotal: <strong id="subtotal">R$ 0,00</strong></p>
-          <p>Desconto: <strong id="desconto">R$ 0,00</strong></p>
-          <p>Frete: <strong id="frete">R$ 0,00</strong></p>
-          <h3>Total: <strong id="total">R$ 0,00</strong></h3>
+
+          <p>
+            Subtotal:
+            <strong id="subtotal">R$ 0,00</strong>
+          </p>
+
+          <p>
+            Desconto:
+            <strong id="desconto">R$ 0,00</strong>
+          </p>
+
+          <p>
+            Frete:
+            <strong id="frete">Informe o CEP</strong>
+          </p>
+
+          <h3>
+            Total:
+            <strong id="total">Aguardando CEP</strong>
+          </h3>
+
         </div>
 
+        <!-- FINALIZAÇÃO DA COMPRA -->
         <form id="formFinalizarCompra">
-          <label for="formaPagamento">Forma de pagamento</label>
+
+          <h3>Dados de entrega</h3>
+
+          <label for="cepDestino">
+            CEP de destino
+          </label>
+
+          <input
+            type="text"
+            id="cepDestino"
+            name="cepDestino"
+            placeholder="Ex.: 16195-014"
+            maxlength="9"
+            inputmode="numeric"
+            autocomplete="postal-code"
+            required
+          >
+
+          <p>
+            Frete estimado em R$ 1,00 por km.
+          </p>
+
+          <label for="formaPagamento">
+            Forma de pagamento
+          </label>
 
           <select id="formaPagamento" required>
-            <option value="dinheiro">Dinheiro (10% de desconto)</option>
-            <option value="cartao">Cartão</option>
+            <option value="dinheiro">
+              Dinheiro (10% de desconto)
+            </option>
+
+            <option value="cartao">
+              Cartão
+            </option>
           </select>
 
           <button type="submit" class="botao-principal">
             Finalizar compra
           </button>
+
         </form>
 
         <p id="mensagemCompra" class="mensagem"></p>
+
       </section>
 
       <!-- HISTÓRICO DA COMPRA -->
       <section id="resultadoCompra" class="painel" hidden>
+
         <h2>Compra realizada!</h2>
+
         <div id="detalhesCompra"></div>
+
       </section>
 
     </section>
@@ -156,3 +221,4 @@
 
 </body>
 </html>
+

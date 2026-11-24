@@ -6,14 +6,15 @@ const Product = require('../models/Product');
 const User = require('../models/User');
 const Order = require('../models/Order');
 
-const FRETE_FIXO = 45;
+const { calcularFrete } = require('./freteService');
+
 const LIMITE_VIP = 300;
 
 function arredondar(valor) {
   return Math.round((valor + Number.EPSILON) * 100) / 100;
 }
 
-async function finalizarCompra(usuarioId, formaPagamento) {
+async function finalizarCompra(usuarioId, formaPagamento, cepDestino) {
   if (!['dinheiro', 'cartao'].includes(formaPagamento)) {
     throw new Error('Forma de pagamento inválida.');
   }
@@ -65,9 +66,7 @@ async function finalizarCompra(usuarioId, formaPagamento) {
         );
 
         if (!variacao) {
-          throw new Error(
-            `Variação ${item.peso} não encontrada.`
-          );
+          throw new Error(`Variação ${item.peso} não encontrada.`);
         }
 
         if (variacao.estoque < item.quantidade) {
@@ -88,7 +87,6 @@ async function finalizarCompra(usuarioId, formaPagamento) {
           quantidade: item.quantidade
         });
 
-        // Descontar estoque dentro da transação
         variacao.estoque -= item.quantidade;
       }
 
@@ -99,8 +97,13 @@ async function finalizarCompra(usuarioId, formaPagamento) {
         ? arredondar(subtotal * 0.10)
         : 0;
 
-      // Frete grátis somente para clientes que já são VIP
-      const frete = usuario.vip ? 0 : FRETE_FIXO;
+      // Calcular frete conforme CEP e condição VIP
+      const calculoFrete = calcularFrete(
+        cepDestino,
+        usuario.vip
+      );
+
+      const frete = calculoFrete.valorFrete;
 
       // Total da compra
       const total = arredondar(
@@ -112,13 +115,15 @@ async function finalizarCompra(usuarioId, formaPagamento) {
         await produto.save({ session });
       }
 
-      // Criar pedido dentro da transação
+      // Criar pedido com dados da entrega
       const [pedido] = await Order.create(
         [{
           usuario: usuarioId,
           itens: itensPedido,
           subtotal,
           desconto,
+          cepDestino: String(cepDestino).replace(/\D/g, ''),
+          distanciaKm: calculoFrete.distanciaKm,
           frete,
           total,
           formaPagamento,
@@ -139,7 +144,7 @@ async function finalizarCompra(usuarioId, formaPagamento) {
 
       await usuario.save({ session });
 
-      // Limpar carrinho dentro da transação
+      // Limpar carrinho
       await Cart.deleteOne(
         { _id: carrinho._id },
         { session }
@@ -148,6 +153,7 @@ async function finalizarCompra(usuarioId, formaPagamento) {
       resultado = {
         mensagem: 'Compra finalizada com sucesso!',
         pedido,
+        entrega: calculoFrete,
         cliente: {
           nome: usuario.nome,
           totalGasto: usuario.totalGasto,
@@ -166,4 +172,3 @@ async function finalizarCompra(usuarioId, formaPagamento) {
 module.exports = {
   finalizarCompra
 };
-

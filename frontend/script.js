@@ -19,12 +19,64 @@ const listaProdutos = document.getElementById('listaProdutos');
 const itensCarrinho = document.getElementById('itensCarrinho');
 const mensagemCompra = document.getElementById('mensagemCompra');
 
+const campoCepDestino = document.getElementById('cepDestino');
+
+// CONFIGURAÇÃO DO FRETE
+const CEP_ORIGEM = '16195014';
+const VALOR_POR_KM = 1.00;
+
+const distanciasCEP = [
+  { inicio: '16000000', fim: '16999999', distanciaKm: 50 },
+  { inicio: '17000000', fim: '17999999', distanciaKm: 100 },
+  { inicio: '15000000', fim: '15999999', distanciaKm: 150 },
+  { inicio: '14000000', fim: '14999999', distanciaKm: 200 }
+];
+
 // FORMATAÇÃO DE VALORES
 function formatarMoeda(valor) {
   return Number(valor || 0).toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL'
   });
+}
+
+// ESTIMAR FRETE PARA EXIBIÇÃO NA TELA
+// O cálculo definitivo é realizado pelo backend.
+function calcularFreteEstimado(cepDestino) {
+  if (usuario?.vip) {
+    return {
+      distanciaKm: 0,
+      valorFrete: 0
+    };
+  }
+
+  const cep = String(cepDestino || '').replace(/\D/g, '');
+
+  if (cep.length !== 8) {
+    return null;
+  }
+
+  if (cep === CEP_ORIGEM) {
+    return {
+      distanciaKm: 0,
+      valorFrete: 0
+    };
+  }
+
+  const regiao = distanciasCEP.find(
+    faixa => cep >= faixa.inicio && cep <= faixa.fim
+  );
+
+  if (!regiao) {
+    return null;
+  }
+
+  return {
+    distanciaKm: regiao.distanciaKm,
+    valorFrete: Number(
+      (regiao.distanciaKm * VALOR_POR_KM).toFixed(2)
+    )
+  };
 }
 
 // REQUISIÇÕES À API
@@ -48,7 +100,9 @@ async function requisicao(endpoint, metodo = 'GET', dados = null) {
   const resultado = await resposta.json();
 
   if (!resposta.ok) {
-    throw new Error(resultado.mensagem || 'Erro na comunicação com o servidor.');
+    throw new Error(
+      resultado.mensagem || 'Erro na comunicação com o servidor.'
+    );
   }
 
   return resultado;
@@ -365,7 +419,8 @@ function renderizarCarrinho() {
       ? subtotal * 0.10
       : 0;
 
-  const frete = usuario?.vip ? 0 : 45;
+  const cepDestino = campoCepDestino?.value || '';
+  const calculoFrete = calcularFreteEstimado(cepDestino);
 
   document.getElementById('contadorCarrinho').textContent =
     quantidadeTotal;
@@ -376,11 +431,32 @@ function renderizarCarrinho() {
   document.getElementById('desconto').textContent =
     formatarMoeda(desconto);
 
-  document.getElementById('frete').textContent =
-    formatarMoeda(frete);
+  const elementoFrete = document.getElementById('frete');
+  const elementoTotal = document.getElementById('total');
 
-  document.getElementById('total').textContent =
-    formatarMoeda(subtotal - desconto + frete);
+  if (usuario?.vip) {
+    elementoFrete.textContent = formatarMoeda(0);
+    elementoTotal.textContent =
+      formatarMoeda(subtotal - desconto);
+
+  } else if (!cepDestino.replace(/\D/g, '')) {
+    elementoFrete.textContent = 'Informe o CEP';
+    elementoTotal.textContent = 'Aguardando CEP';
+
+  } else if (!calculoFrete) {
+    elementoFrete.textContent = 'CEP não cadastrado';
+    elementoTotal.textContent = 'Não calculado';
+
+  } else {
+    elementoFrete.textContent =
+      `${formatarMoeda(calculoFrete.valorFrete)} ` +
+      `(${calculoFrete.distanciaKm} km estimados)`;
+
+    elementoTotal.textContent =
+      formatarMoeda(
+        subtotal - desconto + calculoFrete.valorFrete
+      );
+  }
 }
 
 // ATUALIZAR VALORES AO TROCAR PAGAMENTO
@@ -388,6 +464,11 @@ document.getElementById('formaPagamento').addEventListener(
   'change',
   renderizarCarrinho
 );
+
+// ATUALIZAR FRETE AO DIGITAR CEP
+if (campoCepDestino) {
+  campoCepDestino.addEventListener('input', renderizarCarrinho);
+}
 
 // ABRIR E FECHAR CARRINHO
 document.getElementById('botaoCarrinho').addEventListener('click', async () => {
@@ -451,13 +532,32 @@ document.getElementById('formFinalizarCompra').addEventListener(
     const formaPagamento =
       document.getElementById('formaPagamento').value;
 
+    const cepDestino = campoCepDestino?.value.trim() || '';
+
+    if (!/^\d{5}-?\d{3}$/.test(cepDestino)) {
+      mensagemCompra.textContent =
+        'Informe um CEP válido com 8 dígitos.';
+      return;
+    }
+
+    const calculoFrete = calcularFreteEstimado(cepDestino);
+
+    if (!usuario?.vip && !calculoFrete) {
+      mensagemCompra.textContent =
+        'Não temos distância cadastrada para esse CEP.';
+      return;
+    }
+
     mensagemCompra.textContent = 'Processando sua compra...';
 
     try {
       const resultado = await requisicao(
         '/checkout/finalizar',
         'POST',
-        { formaPagamento }
+        {
+          formaPagamento,
+          cepDestino
+        }
       );
 
       mensagemCompra.textContent =
@@ -476,6 +576,12 @@ document.getElementById('formFinalizarCompra').addEventListener(
           `Total: ${formatarMoeda(pedido.total)}`,
           `Pagamento: ${pedido.formaPagamento}`
         ];
+
+        if (resultado.entrega) {
+          detalhes.push(
+            `Distância estimada: ${resultado.entrega.distanciaKm} km`
+          );
+        }
 
         detalhes.forEach(texto => {
           const paragrafo = document.createElement('p');
@@ -524,8 +630,13 @@ document.getElementById('botaoSair').addEventListener('click', () => {
   formLogin.reset();
   formCadastro.reset();
 
+  if (campoCepDestino) {
+    campoCepDestino.value = '';
+  }
+
   document.getElementById('resultadoCompra').hidden = true;
   document.getElementById('secaoCarrinho').classList.remove('aberto');
 
   document.getElementById('abaLogin').click();
 });
+

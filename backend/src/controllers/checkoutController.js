@@ -5,7 +5,7 @@ const {
 
 async function concluirCompra(req, res) {
   try {
-    const { formaPagamento } = req.body;
+    const { formaPagamento, cepDestino } = req.body;
 
     if (!formaPagamento) {
       return res.status(400).json({
@@ -13,9 +13,16 @@ async function concluirCompra(req, res) {
       });
     }
 
+    if (!cepDestino) {
+      return res.status(400).json({
+        mensagem: 'Informe o CEP de destino.'
+      });
+    }
+
     const resultado = await finalizarCompra(
       req.usuario.id,
-      formaPagamento
+      formaPagamento,
+      cepDestino
     );
 
     return res.status(201).json(resultado);
